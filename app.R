@@ -78,7 +78,7 @@ ui = fluidPage(
                                ),
                       tabPanel(title="Table of Historical Prices",
                                dataTableOutput("table")),
-                      tabPanel(title = "About"))
+                      tabPanel(title = "About", includeMarkdown("about.Rmd")))
 )
 
 

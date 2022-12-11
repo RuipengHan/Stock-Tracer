@@ -11,7 +11,8 @@ date: "2022-12-11"
 
 ## Purpose
 
-This app servers to provide users an oerview of the S&P 500 Company historical stock prices in the form of plot and tables.
+This app servers to provide users an overview of the S&P 500 Company historical stock prices in the form of plot and tables.
+Users can select any S&P company (a total of 503 companies), and view their historical prices as a reference. Below the plot, there is also some info on the average prices of the selected stock over the time boundary.
 
 
 ## Data

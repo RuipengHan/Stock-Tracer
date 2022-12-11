@@ -27,24 +27,26 @@ print("Done!")
 ui = fluidPage(
       navbarPage(title="SP 500 Stock Price",
                       tabPanel(title="Visualization of Historical Prices",
-                               titlePanel(title="SP 500 Companies Historical Prices Visualization"),
+                               titlePanel(title="SP 500 Companies Historical Prices Visualization (Until 2022-12-09)"),
                                sidebarLayout(
                                  sidebarPanel(
-                                   selectInput(inputId = "type", 
-                                               label="Select Type", 
-                                               choices = c("Close vs. Time", "Volume vs Time."), 
-                                               selected="Close vs Time"),
-                                   
+                                   # selectInput(inputId = "type", 
+                                   #             label="Select Type", 
+                                   #             choices = c("Close vs. Time", "Volume vs Time."), 
+                                   #             selected="Close vs Time"),
                                    selectInput(inputId = "sector", 
                                                label="Select Sector (if selected, stock list will be updated accordingly)", 
                                                choices = sort(c("ALL", unique(stock_symbol$`GICS Sector`)) )),
-                                 
+                                   
+                                   selectInput(inputId = "stock1", 
+                                               label="Stock", 
+                                               choices = unique(stock_data$tick)),
                                    dateInput(
                                      inputId="dateFrom",
                                      label="From",
-                                     value = "2000-01-01",
+                                     value = "2019-01-01",
                                      min = NULL,
-                                     max = NULL,
+                                     max = "2022-12-09",
                                      format = "yyyy-mm-dd",
                                      startview = "month",
                                      weekstart = 0,
@@ -57,9 +59,9 @@ ui = fluidPage(
                                    dateInput(
                                      inputId="dateTo",
                                      label="To",
-                                     value = format(Sys.time(), "%Y-%m-%d"),
+                                     value = "2022-12-09", # format(Sys.time(), "%Y-%m-%d"),
                                      min = NULL,
-                                     max = NULL,
+                                     max = "2022-12-09", # format(Sys.time(), "%Y-%m-%d"),
                                      format = "yyyy-mm-dd",
                                      startview = "month",
                                      weekstart = 0,
@@ -68,10 +70,7 @@ ui = fluidPage(
                                      autoclose = TRUE,
                                      datesdisabled = NULL,
                                      daysofweekdisabled = NULL
-                                   ),
-                                   selectInput(inputId = "stock1", 
-                                               label="Stock", 
-                                               choices = unique(stock_data$tick))
+                                   )
                                  ),
                                  mainPanel(plotOutput("plot"), textOutput("detail"))
                                  )
@@ -84,8 +83,7 @@ ui = fluidPage(
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
-    # Defines what to display for the output
-    # if (): set x scale
+    # Returns list of companies in the selected sector
     updateStockBySector = reactive({
       if (input$sector != "ALL"){
         stock_data |> 
@@ -96,11 +94,27 @@ server <- function(input, output) {
       }
     })
     
+    
     observeEvent(
       eventExpr = input$sector,
       handlerExpr = {
         updateSelectInput(inputId = "stock1",
                           choices = sort(unique(updateStockBySector()$tick)))
+      }
+    )
+    
+    updateMinTime = reactive({
+      stock_data |> 
+        filter(tick == input$stock1) |>
+        group_by(tick) |>
+        summarise(min_date = min(Date))
+    })
+    
+    # Upon selecting a stock, update the min time.
+    observeEvent(
+      eventExpr = input$stock1,
+      handlerExpr = {
+        updateDateInput(inputId = "dateFrom", min = updateMinTime()$min_date, value=updateMinTime()$min_date)
       }
     )
     

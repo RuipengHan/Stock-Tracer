@@ -44,7 +44,10 @@ company_name = data |>
 company_name
 
 df
-
+df |> 
+  filter(tick == "AAPL") |>
+  group_by(tick) |>
+  summarise(min_date = min(Date))
 
 # MEthod 2
 # df <-

@@ -1,0 +1,26 @@
+---
+title: "about"
+output: html_document
+date: "2022-12-11"
+---
+
+## Author
+* Name: Ruipeng Han
+* Email: ruipeng2@illinois.edu
+
+## Purpose
+
+This app servers to provide users an oerview of the S&P 500 Company historical stock prices in the form of plot and tables.
+
+
+## Data
+
+The data I used is collected from Yahoo Finance. 
+
+Specifically, I developed a Python script that calls the Yahoo Finance public API to retrieve historical stock prices for the S&P companies.
+
+## References
+
+* [yahoo finance market data](https://finance.yahoo.com/quote/AAPL/history?p=AAPL)
+* [yfinance stock data API](https://algotrading101.com/learn/yfinance-guide/)
+* [S&P 500 Companies Symbols](https://stockmarketmba.com/stocksinthesp500.php)

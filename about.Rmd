@@ -1,0 +1,29 @@
+---
+title: "about"
+output: html_document
+date: "2022-12-11"
+---
+<!-- RMarkDown tutorial: https://rmarkdown.rstudio.com/authoring_basics.html -->
+
+## Author
+* Name: Ruipeng Han
+* Email: ruipeng2@illinois.edu
+
+## Purpose
+
+This app servers to provide users an overview of the S&P 500 Company historical stock prices in the form of plot and tables.
+Users can select any S&P company (a total of 503 companies), and view their historical prices as a reference. Below the plot, there is also some info on the average prices of the selected stock over the time boundary.
+
+
+## Data
+
+The stock data I used is collected from Yahoo Finance. For each company, I retrieve its stock historical data from its earlies listing date upon until 2022-12-09 and saved as a single .csv file. Each date is represented as a single row, and there are multiple columns representing the prices (opening price, close price, high, low, and volumes). For this project, I only used the close price to represent the price of that day for the selected stock.
+
+
+**How data is collected:** I developed a Python script that calls the Yahoo Finance public API to retrieve historical stock prices for the S&P companies. The Python script is included as part of the .zip file.
+
+## References
+
+* [yahoo finance market data](https://finance.yahoo.com/quote/AAPL/history?p=AAPL)
+* [yfinance stock data API](https://algotrading101.com/learn/yfinance-guide/)
+* [S&P 500 Companies Symbols](https://stockmarketmba.com/stocksinthesp500.php)

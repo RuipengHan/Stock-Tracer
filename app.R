@@ -73,7 +73,7 @@ ui = fluidPage(
                                                label="Stock", 
                                                choices = unique(stock_data$tick))
                                  ),
-                                 mainPanel(plotOutput("plot"))
+                                 mainPanel(plotOutput("plot"), textOutput("detail"))
                                  )
                                ),
                       tabPanel(title="Table of Historical Prices",
@@ -117,6 +117,26 @@ server <- function(input, output) {
     #   ggplot(data=faithful, mapping=aes(x=waiting)) +
     #     geom_histogram(bins=input$bins, fill=input$plotColor)
     })
+    
+    # Output for the stock detail text
+    output$detail <- renderText({
+      # Get the targeted stock with time interval.
+      data = stock_data |>
+        filter(tick == input$stock1) |>
+        filter(Date >= as.Date(input$dateFrom) & Date <= as.Date(input$dateTo))
+      
+      # Get the corresponding company name
+      company_name = data |> 
+        left_join(stock_symbol, by=c("tick" = "Symbol")) |>
+        select(Description) |>
+        unique()
+      
+      # Calculate the average price of this stock over the time interval.
+      average_price = as.character(round(avg_prices(data)$avg, 3))
+      paste("The stock you selected is ", input$stock1, " (", company_name, "), with average price of $", average_price, " over the time inveral.",sep = "")
+
+    })
+    
     
     # Output for the data table.
     output$table <- renderDataTable({

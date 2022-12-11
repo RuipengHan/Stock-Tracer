@@ -12,13 +12,14 @@ list_csv_files = list_csv_files[-which(list_csv_files=="data/sp500.csv")]
 # Read all csv files into one df.
 df = readr::read_csv(list_csv_files, id = "tick")
 
-
+df
 # Change the tick column to match its company
 df$tick = sub("data/", "", df$tick)
 
 df$tick = sub(".csv", "", df$tick)
 
 stock_symbol = readr::read_csv("data/sp500.csv")
+stock_symbol$Description
 stock_symbol$`GICS Sector`
 # Sample query: count all days of records for each company.
 df |> group_by(tick) |> summarise(n=n()) |> print()
@@ -31,6 +32,18 @@ df |>
   ggplot(aes(x = Date, y = Close)) +
   geom_line() 
 
+
+data = df |>
+  filter(tick == "AAPL") 
+
+company_name = data |> 
+  left_join(stock_symbol, by=c("tick" = "Symbol")) |>
+  select(Description) |>
+  unique()
+
+company_name
+
+df
 
 
 # MEthod 2

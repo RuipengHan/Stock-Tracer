@@ -26,7 +26,7 @@ print("Done!")
 
 ui = fluidPage(
       navbarPage(title="SP 500 Stock Price",
-                      tabPanel(title="Visualization",
+                      tabPanel(title="Visualization of Historical Prices",
                                titlePanel(title="SP 500 Companies Historical Prices Visualization"),
                                sidebarLayout(
                                  sidebarPanel(
@@ -76,8 +76,9 @@ ui = fluidPage(
                                  mainPanel(plotOutput("plot"))
                                  )
                                ),
-                      tabPanel(title="About"),
-                      tabPanel(title = "Credits"))
+                      tabPanel(title="Table of Historical Prices",
+                               dataTableOutput("table")),
+                      tabPanel(title = "About"))
 )
 
 
@@ -115,6 +116,13 @@ server <- function(input, output) {
         scale_x_date(date_breaks = "years" , date_labels = "%Y")
     #   ggplot(data=faithful, mapping=aes(x=waiting)) +
     #     geom_histogram(bins=input$bins, fill=input$plotColor)
+    })
+    
+    # Output for the data table.
+    output$table <- renderDataTable({
+      stock_data |>
+        filter(tick == input$stock1) |>
+        filter(Date >= as.Date(input$dateFrom) & Date <= as.Date(input$dateTo))
     })
 }
 
